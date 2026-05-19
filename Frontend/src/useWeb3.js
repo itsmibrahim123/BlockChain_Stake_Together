@@ -238,14 +238,34 @@ export const useWeb3 = () => {
     return () => clearInterval(interval);
   }, [fetchData, useMock]);
 
+  // Real-time reward counter logic (Gamified Ticking Engine)
+  const [visualReward, setVisualReward] = useState('0');
+
   useEffect(() => {
     if (parseFloat(stakedAmount) > 0) {
       const ticker = setInterval(() => {
-        setReward(prev => (parseFloat(prev) + 0.0001).toFixed(6));
+        // Target is what the contract says we are owed (e.g., 1M)
+        const targetReward = parseFloat(reward) || 0;
+        
+        // If the countdown is finished, show the full reward
+        if (timeRemaining <= 0) {
+          setVisualReward(targetReward.toFixed(6));
+          return;
+        }
+
+        // Calculate progress: how much time has passed
+        const timeElapsed = STAKING_DURATION - timeRemaining;
+        const progressFactor = Math.min(timeElapsed / STAKING_DURATION, 1);
+        
+        // Scale the reward by time passed
+        const currentScale = (targetReward * progressFactor).toFixed(6);
+        setVisualReward(currentScale);
       }, 1000);
       return () => clearInterval(ticker);
+    } else {
+      setVisualReward('0');
     }
-  }, [stakedAmount]);
+  }, [stakedAmount, timeRemaining, reward]);
 
   // Listen for account changes in live mode
   useEffect(() => {
@@ -264,7 +284,8 @@ export const useWeb3 = () => {
     toggleMock,
     stakedAmount,
     totalStaked,
-    reward,
+    reward: visualReward, // Return the visual reward for the UI
+    actualReward: reward, // Keep the actual reward for claim logic
     timeRemaining,
     topStaker,
     loading,
