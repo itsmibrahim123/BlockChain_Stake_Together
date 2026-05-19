@@ -6,7 +6,8 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title StakeTogether
- * @notice Users stake CloudCoin for 7 days and earn proportional rewards.
+ * @notice Users stake CloudCoin and earn proportional rewards.
+ * @dev Staking timer starts ONLY when the reward pool is funded.
  */
 contract StakeTogether is ReentrancyGuard {
 
@@ -43,22 +44,25 @@ contract StakeTogether is ReentrancyGuard {
     }
 
     modifier stakingOpen() {
+        require(rewardPoolFunded, "Pool not funded");
         require(block.timestamp < stakingEndTime, "Staking period ended");
         _;
     }
 
     modifier stakingClosed() {
+        require(rewardPoolFunded, "Pool not funded");
         require(block.timestamp >= stakingEndTime, "Staking still open");
         _;
     }
 
     // ── Constructor ──────────────────────────────────────────────────────────
 
-    constructor(address _cloudCoinAddress) {
+    constructor(address _cloudCoinAddress, address _owner) {
         require(_cloudCoinAddress != address(0), "Invalid token address");
+        require(_owner != address(0), "Invalid owner address");
         cloudCoin = IERC20(_cloudCoinAddress);
-        owner = msg.sender;
-        stakingEndTime = block.timestamp + STAKING_DURATION;
+        owner = _owner;
+        // Timer does NOT start yet
     }
 
     // ── Owner Functions ──────────────────────────────────────────────────────
@@ -66,6 +70,9 @@ contract StakeTogether is ReentrancyGuard {
     function fundRewardPool() external onlyOwner {
         require(!rewardPoolFunded, "Already funded");
         rewardPoolFunded = true;
+        
+        // START THE TIMER NOW
+        stakingEndTime = block.timestamp + STAKING_DURATION;
 
         bool success = cloudCoin.transferFrom(msg.sender, address(this), REWARD_POOL);
         require(success, "Funding failed");
@@ -76,7 +83,6 @@ contract StakeTogether is ReentrancyGuard {
     // ── User Functions ───────────────────────────────────────────────────────
 
     function stake(uint256 amount) external nonReentrant stakingOpen {
-        require(rewardPoolFunded, "Reward pool not funded yet");
         require(amount > 0, "Cannot stake 0");
 
         bool success = cloudCoin.transferFrom(msg.sender, address(this), amount);
@@ -119,10 +125,11 @@ contract StakeTogether is ReentrancyGuard {
     }
 
     function isStakingOpen() external view returns (bool) {
-        return block.timestamp < stakingEndTime;
+        return rewardPoolFunded && block.timestamp < stakingEndTime;
     }
 
     function timeRemaining() external view returns (uint256) {
+        if (!rewardPoolFunded) return STAKING_DURATION;
         if (block.timestamp >= stakingEndTime) return 0;
         return stakingEndTime - block.timestamp;
     }
