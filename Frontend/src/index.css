@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #08090c;
+  --color-matrix: #4fffb0;
+  --color-psionic: #7b5cff;
+  --color-emergency: #ff4f5e;
+  
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-void text-slate-100 font-mono overflow-x-hidden;
+    background-image: 
+      linear-gradient(rgba(79, 255, 176, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79, 255, 176, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-black/40 backdrop-blur-md border border-matrix/20 shadow-[0_0_15px_rgba(79,255,176,0.1)];
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-panel::before {
+    content: "";
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    z-index: 10;
+  }
+
+  .neon-text {
+    @apply text-matrix drop-shadow-[0_0_8px_rgba(79,255,176,0.6)];
+  }
+
+  .psionic-text {
+    @apply text-psionic drop-shadow-[0_0_8px_rgba(123,92,255,0.6)];
+  }
+
+  .neon-border {
+    @apply border border-matrix/50 shadow-[0_0_10px_rgba(79,255,176,0.3)];
+  }
+
+  .scanline {
+    @apply absolute w-full h-[100px] bg-gradient-to-b from-transparent via-matrix/5 to-transparent pointer-events-none;
+    animation: scan 4s linear infinite;
+  }
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100vh); }
+}
+
+@keyframes pulse-aura {
+  0% { box-shadow: 0 0 5px rgba(79, 255, 176, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(79, 255, 176, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(79, 255, 176, 0.5); }
+}
+
+.aura-pulse {
+  animation: pulse-aura 2s infinite;
+}
