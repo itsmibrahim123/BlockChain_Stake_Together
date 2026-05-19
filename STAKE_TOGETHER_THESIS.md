@@ -39,7 +39,8 @@ The core logic resides in two primary smart contracts:
 ### 3.2 Frontend Layer (React + Ethers.js)
 The frontend utilizes a custom `useWeb3` hook to manage the bridge between the browser (MetaMask) and the Sepolia blockchain. It handles:
 - **Multi-Wallet Support:** Listening for `accountsChanged` events.
-- **Network Enforcement:** Automatically switching the user to the Sepolia Testnet.
+- **Network Enforcement:** Automatically switching the user to the Sepolia Testnet (Chain ID: `11155111`).
+- **Hybrid Data Logic:** Supporting both mock simulations and live blockchain interactions.
 
 ---
 
@@ -47,19 +48,34 @@ The frontend utilizes a custom `useWeb3` hook to manage the bridge between the b
 
 ### 4.1 Cyberpunk Aesthetic
 The UI is designed using **Glassmorphism** and **Matrix-style** CSS layers.
-- **Colors:** Deep Void (#08090c), Neon Matrix (#4fffb0), and Psionic Purple (#7b5cff).
-- **Animations:** Background grid scanlines and pulsing aura borders for high-status elements.
+- **Colors:** Deep Void (#08090c), Neon Matrix (#4fffb0), vibrant Psionic Purple (#7b5cff), and Tactical Emergency Red (#ff4f5e).
+- **Animations:** Background grid scanlines, pulsing aura borders for high-status elements, and interactive loading bars.
 
-### 4.2 The "Ticking Yield Engine"
-Unlike static dashboards, the Arena features a time-scaled yield counter. It calculates rewards based on the percentage of the 60-minute lockup duration completed, causing the reward balance to increment every second in real-time.
+### 4.2 UI Component Architecture
+The Arena is built from eight specialized modular components:
+1.  **WalletConnect (Secure Neural Link):** Manages multi-wallet authentication and environment toggling (Mock/Live).
+2.  **StakingPanel (Generator Core):** Interactive input for token injection and yield extraction.
+3.  **Leaderboard (Overlord Monolith):** A real-time tracking scoreboard ranking the top stakers.
+4.  **Countdown (Lockup Chronometer):** Industrial-grade countdown system tracking lockup expiration with an interactive progress bar.
+5.  **UserStatus (Personal Parameters):** Displays balance, active stake, and generated yield with rank overlays.
+6.  **AdminPanel (Vault Initialization):** Governs the 2-stage reward pool funding protocol (Approve + Fund).
+7.  **TransactionFeed (Neural Event Stream):** Scrolling terminal outputting real-time blockchain events (Staked, Claimed).
+8.  **DiagnosticHub (System Health Monitor):** Overlay tracking contract reachability and network grid integrity.
 
-### 4.3 Gamified Rank System
-Users progress through "Operator Ranks" based on their staking power:
-| Rank | Staked CC | Rank | Staked CC |
-| :--- | :--- | :--- | :--- |
-| **Recruit Staker** | 0 - 750 | **Quantum Miner** | 3001 - 3750 |
-| **Cyber Scavenger** | 751 - 1500 | **Nexus Megalodon** | 5251 - 6000 |
-| **Grid Runner** | 2251 - 3000 | **Data Overlord** | 6001+ |
+### 4.3 The "Ticking Yield Engine"
+Unlike static dashboards, the Arena features a time-scaled yield counter. It calculates rewards based on the percentage of the 60-minute lockup duration completed, causing the reward balance to increment every second in real-time, simulating value extraction.
+
+### 4.4 Gamified Rank Progression
+Users progress through nine distinct "Operator Ranks" every 750 CC interval:
+- **Recruit Staker:** 0 - 750 CC
+- **Cyber Scavenger:** 751 - 1,500 CC
+- **Neon Architect:** 1,501 - 2,250 CC
+- **Grid Runner:** 2,251 - 3,000 CC
+- **Quantum Miner:** 3,001 - 3,750 CC
+- **Circuit Breaker:** 3,751 - 4,500 CC
+- **Void Merchant:** 4,501 - 5,250 CC
+- **Nexus Megalodon:** 5,251 - 6,000 CC
+- **Data Overlord:** 6,001+ CC
 
 ---
 
@@ -70,11 +86,8 @@ To ensure the integrity of the reward pool, the system implements a strict 2-tra
 1.  **Approve:** Authorizing the contract to access 1,000,000 CC.
 2.  **Fund:** Executing the transfer to the Staking Arena.
 
-### 5.2 Neural Event Stream
-A real-time listener monitors the blockchain for `Staked` and `Claimed` events, outputting them into a scrolling terminal. This provides users with empirical proof that their transactions have been successfully mined.
-
-### 5.3 Diagnostic Hub
-A persistent health monitor tracks:
+### 5.2 Diagnostic Hub
+A persistent health monitor tracks system status to prevent user frustration during network downtime or configuration errors:
 - **Neural Link:** Wallet connectivity status.
 - **Network Grid:** Chain ID verification (Sepolia).
 - **Contract Reachability:** ABI and Address validation.
