@@ -35,7 +35,7 @@ function App() {
               <div className="flex items-center gap-2 mt-2">
                 <Terminal size={12} className="text-slate-500" />
                 <span className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">
-                  v0.4.1 // Protocol_Active // Stake_Period_Open
+                  v0.4.1 // Sepolia_Node_Active // Stake_Period_Open
                 </span>
               </div>
             </div>
@@ -117,8 +117,8 @@ function App() {
         <footer className="mt-12 pt-6 border-t border-white/5 flex flex-wrap justify-between items-center gap-4">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-matrix animate-ping" />
-              <span className="text-[10px] text-slate-500 uppercase font-bold">Network_Active</span>
+              <div className="w-2 h-2 rounded-full bg-psionic animate-ping" />
+              <span className="text-[10px] text-slate-500 uppercase font-bold">Sepolia_Testnet_Active</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-slate-500 uppercase font-bold">Contract:</span>

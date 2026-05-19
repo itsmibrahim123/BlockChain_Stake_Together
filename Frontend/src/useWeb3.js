@@ -14,6 +14,8 @@ export const useWeb3 = () => {
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState('0');
 
+  const SEPOLIA_CHAIN_ID = '0xaa36a7'; // 11155111 in hex
+
   const connectWallet = async () => {
     if (useMock) {
       const mockAccounts = ['0xDEADBEEF...C0DE', '0x71A4...B3E1', '0x1234...5678'];
@@ -25,6 +27,32 @@ export const useWeb3 = () => {
 
     if (window.ethereum) {
       try {
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (chainId !== SEPOLIA_CHAIN_ID) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: SEPOLIA_CHAIN_ID }],
+            });
+          } catch (switchError) {
+            // This error code indicates that the chain has not been added to MetaMask.
+            if (switchError.code === 4902) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: SEPOLIA_CHAIN_ID,
+                  chainName: 'Sepolia Test Network',
+                  nativeCurrency: { name: 'SepoliaETH', symbol: 'SepoliaETH', decimals: 18 },
+                  rpcUrls: ['https://sepolia.infura.io/v3/'],
+                  blockExplorerUrls: ['https://sepolia.etherscan.io'],
+                }],
+              });
+            } else {
+              throw switchError;
+            }
+          }
+        }
+
         const _provider = new ethers.BrowserProvider(window.ethereum);
         const accounts = await _provider.send("eth_requestAccounts", []);
         setAccount(accounts[0]);
