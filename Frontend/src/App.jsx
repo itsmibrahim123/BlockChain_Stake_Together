@@ -7,6 +7,7 @@ import Leaderboard from './components/Leaderboard';
 import Countdown from './components/Countdown';
 import AdminPanel from './components/AdminPanel';
 import TransactionFeed from './components/TransactionFeed';
+import DiagnosticHub from './components/DiagnosticHub';
 import { Terminal, Shield, Zap } from 'lucide-react';
 
 function App() {
@@ -133,6 +134,14 @@ function App() {
           </div>
         </footer>
       </div>
+
+      {/* Persistent Diagnostics Overlay */}
+      <DiagnosticHub 
+        account={web3.account} 
+        provider={web3.provider} 
+        useMock={web3.useMock} 
+        isFunded={web3.isRewardPoolFunded}
+      />
     </div>
   );
 }
