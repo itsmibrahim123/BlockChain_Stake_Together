@@ -6,6 +6,7 @@ import StakingPanel from './components/StakingPanel';
 import Leaderboard from './components/Leaderboard';
 import Countdown from './components/Countdown';
 import AdminPanel from './components/AdminPanel';
+import TransactionFeed from './components/TransactionFeed';
 import { Terminal, Shield, Zap } from 'lucide-react';
 
 function App() {
@@ -82,6 +83,7 @@ function App() {
           {/* Middle Column: Countdown & Visuals */}
           <div className="lg:col-span-4 space-y-6">
             <Countdown timeRemaining={web3.timeRemaining} />
+            <TransactionFeed provider={web3.provider} useMock={web3.useMock} />
             
             <div className="glass-panel p-6 border-psionic/20 group hover:border-psionic transition-colors h-full">
                <div className="flex items-center justify-between mb-4">

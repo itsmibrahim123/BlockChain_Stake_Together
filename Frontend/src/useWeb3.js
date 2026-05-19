@@ -272,6 +272,7 @@ export const useWeb3 = () => {
     isRewardPoolFunded,
     fundRewardPool,
     stake,
-    claim
+    claim,
+    provider
   };
 };
