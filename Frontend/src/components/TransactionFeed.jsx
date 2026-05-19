@@ -13,13 +13,19 @@ const TransactionFeed = ({ provider, useMock }) => {
         "ENCRYPTED_LINK_ESTABLISHED_0x4A...453",
         "DATA_STREAM_SYNCHRONIZED",
       ];
-      setLogs(mockEvents.map(m => ({ id: Math.random(), msg: m, type: 'system' })));
+      setLogs(mockEvents.map((m, i) => ({ 
+        id: `mock-init-${i}-${Date.now()}`, 
+        timestamp: Date.now(),
+        msg: m, 
+        type: 'system' 
+      })));
 
       const interval = setInterval(() => {
         const addr = `0x${Math.random().toString(16).slice(2, 6)}...${Math.random().toString(16).slice(2, 6)}`;
         const amount = (Math.random() * 500).toFixed(0);
         const newMsg = {
-          id: Math.random(),
+          id: `mock-ev-${Date.now()}-${Math.random()}`,
+          timestamp: Date.now(),
           msg: `STAKE_DETECTED: [${addr}] fueled ${amount} CC`,
           type: 'event'
         };
@@ -34,7 +40,8 @@ const TransactionFeed = ({ provider, useMock }) => {
 
     const handleStaked = (user, amount) => {
       const msg = {
-        id: Date.now(),
+        id: `stake-${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
         msg: `INJECTION_SUCCESS: ${user.slice(0, 6)}... added ${ethers.formatEther(amount)} CC`,
         type: 'staked'
       };
@@ -43,7 +50,8 @@ const TransactionFeed = ({ provider, useMock }) => {
 
     const handleClaimed = (user, reward) => {
       const msg = {
-        id: Date.now(),
+        id: `claim-${Date.now()}-${Math.random()}`,
+        timestamp: Date.now(),
         msg: `EXTRACTION_SUCCESS: ${user.slice(0, 6)}... claimed ${ethers.formatEther(reward)} yield`,
         type: 'claimed'
       };
@@ -81,7 +89,7 @@ const TransactionFeed = ({ provider, useMock }) => {
               log.type === 'staked' ? 'text-matrix' : 
               log.type === 'claimed' ? 'text-psionic' : 'text-slate-300'
             }`}>
-              <span className="opacity-40 mr-2">[{new Date(log.id).toLocaleTimeString([], { hour12: false })}]</span>
+              <span className="opacity-40 mr-2">[{new Date(log.timestamp).toLocaleTimeString([], { hour12: false })}]</span>
               {log.msg}
             </p>
           </div>

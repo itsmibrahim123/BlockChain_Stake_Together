@@ -379,11 +379,11 @@
 			]
 		},
 		"SmartContracts/StakeTogether.sol": {
-			"keccak256": "0x1a74e0cd9269872359a34e50b3566dda87c12e5af461d4d2ce923da1db55e050",
+			"keccak256": "0x4c370f4afc7ce642e4b9487b7b2945849e67d12a9f81e83247b8997c15d5d3af",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3a64fc4cfdc7173d6e1df29ee6f51488f90e4ff03cd2cc79d5ab8c9ee5530c0b",
-				"dweb:/ipfs/QmTSy15ZuBFPvxm2XZh3A4hSQV6uZtuzmqeReDwFe29QPp"
+				"bzz-raw://2ca7f5af6ff76e23193dff68aea82183bb54ba2e5426d8dfa130152ebe42668a",
+				"dweb:/ipfs/Qmde776myboMLWBDjNx8bUB35kxjY8hfXGFfxAYwamKQmf"
 			]
 		}
 	},
