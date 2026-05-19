@@ -92,26 +92,45 @@ export const useWeb3 = () => {
       const contract = new ethers.Contract(CONTRACT_ADDRESSES.STAKE_TOGETHER, STAKE_TOGETHER_ABI, provider);
       const token = new ethers.Contract(CONTRACT_ADDRESSES.CLOUD_COIN, CLOUD_COIN_ABI, provider);
 
-      const [staked, total, rem, lb, bal, funded] = await Promise.all([
-        contract.stakes(account),
-        contract.totalStaked(),
-        contract.timeRemaining(),
-        contract.getLeaderboard(),
-        token.balanceOf(account),
-        contract.rewardPoolFunded()
-      ]);
+      // Fetch basic token balance first
+      try {
+        const bal = await token.balanceOf(account);
+        setBalance(ethers.formatEther(bal));
+      } catch (e) { console.error("Error fetching balance", e); }
 
-      setStakedAmount(ethers.formatEther(staked));
-      setTotalStaked(ethers.formatEther(total));
-      setTimeRemaining(Number(rem));
-      setTopStaker({ address: lb[0], amount: ethers.formatEther(lb[1]) });
-      setBalance(ethers.formatEther(bal));
-      setIsRewardPoolFunded(funded);
+      // Fetch StakeTogether data individually to prevent one failure from stopping others
+      try {
+        const staked = await contract.stakes(account);
+        setStakedAmount(ethers.formatEther(staked));
+      } catch (e) { console.error("Error fetching stake", e); }
 
-      const preview = await contract.previewReward(account);
-      setReward(ethers.formatEther(preview));
+      try {
+        const total = await contract.totalStaked();
+        setTotalStaked(ethers.formatEther(total));
+      } catch (e) { console.error("Error fetching total staked", e); }
+
+      try {
+        const rem = await contract.timeRemaining();
+        setTimeRemaining(Number(rem));
+      } catch (e) { console.error("Error fetching time", e); }
+
+      try {
+        const lb = await contract.getLeaderboard();
+        setTopStaker({ address: lb[0], amount: ethers.formatEther(lb[1]) });
+      } catch (e) { console.error("Error fetching leaderboard", e); }
+
+      try {
+        const funded = await contract.rewardPoolFunded();
+        setIsRewardPoolFunded(funded);
+      } catch (e) { console.error("Error fetching funding status", e); }
+
+      try {
+        const preview = await contract.previewReward(account);
+        setReward(ethers.formatEther(preview));
+      } catch (e) { console.error("Error fetching preview", e); }
+
     } catch (err) {
-      console.error("Error fetching data", err);
+      console.error("Critical error in fetchData", err);
     }
   }, [account, provider, useMock]);
 
