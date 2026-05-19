@@ -44,4 +44,4 @@ export const RANKS = [
   { name: "Data Overlord", min: 6001, max: Infinity },
 ];
 
-export const STAKING_DURATION = 10 * 60; // 10 minutes in seconds
+export const STAKING_DURATION = 60 * 60; // 1 hour in seconds

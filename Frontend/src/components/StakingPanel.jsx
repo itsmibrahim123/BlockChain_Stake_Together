@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Zap, Lock, Unlock, Loader2 } from 'lucide-react';
 
-const StakingPanel = ({ stake, claim, loading, isStakingOpen }) => {
+const StakingPanel = ({ stake, claim, loading, isStakingOpen, stakedAmount }) => {
   const [amount, setAmount] = useState('');
+  const hasStake = parseFloat(stakedAmount) > 0;
 
   const handleStake = async () => {
     if (!amount || isNaN(amount) || parseFloat(amount) <= 0) return;
@@ -59,10 +60,10 @@ const StakingPanel = ({ stake, claim, loading, isStakingOpen }) => {
         <h3 className="text-[10px] uppercase text-slate-500 mb-4 tracking-tighter">Extraction Protocol</h3>
         <button
           onClick={claim}
-          disabled={loading || isStakingOpen}
+          disabled={loading || isStakingOpen || !hasStake}
           className={`w-full py-3 flex items-center justify-center gap-3 uppercase tracking-widest text-xs font-bold transition-all
-            ${!isStakingOpen 
-              ? 'bg-psionic text-void hover:bg-psionic/80' 
+            ${(!isStakingOpen && hasStake)
+              ? 'bg-psionic text-void hover:bg-psionic/80 shadow-[0_0_10px_#7b5cff]' 
               : 'border border-psionic/20 text-psionic/40 cursor-not-allowed'}`}
         >
           {loading ? (
@@ -70,11 +71,11 @@ const StakingPanel = ({ stake, claim, loading, isStakingOpen }) => {
           ) : (
             <>
               <Unlock size={16} />
-              Claim All Yield
+              {hasStake ? 'Claim All Yield' : 'No Yield to Extract'}
             </>
           )}
         </button>
-        {isStakingOpen && (
+        {isStakingOpen && hasStake && (
           <p className="text-[8px] text-center mt-2 text-emergency/60 italic uppercase tracking-widest">
             Extraction unauthorized - lockup in progress
           </p>

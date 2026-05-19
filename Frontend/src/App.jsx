@@ -77,6 +77,7 @@ function App() {
               claim={web3.claim} 
               loading={web3.loading} 
               isStakingOpen={web3.timeRemaining > 0} 
+              stakedAmount={web3.stakedAmount}
             />
           </div>
 

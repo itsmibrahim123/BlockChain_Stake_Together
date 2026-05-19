@@ -16,7 +16,7 @@ contract StakeTogether is ReentrancyGuard {
     address public immutable owner;      
 
     uint256 public constant REWARD_POOL = 1_000_000 * 10 ** 18; 
-    uint256 public constant STAKING_DURATION = 10 minutes;           
+    uint256 public constant STAKING_DURATION = 60 minutes;           
 
     uint256 public stakingEndTime;    
     uint256 public totalStaked;       
